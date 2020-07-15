@@ -12,6 +12,14 @@ const resolvers = {
     lists: async (parent, args, context) => {
       return context.prisma.list.findMany();
     },
+    listById: async (obj, args, context, info) => {
+      const result = await prisma.list.findOne({
+        where: {
+          id: parseInt(args.listId),
+        },
+      });
+      return result;
+    },
     todos: async (parent, args, context) => {
       return context.prisma.todo.findMany();
     },
@@ -44,6 +52,13 @@ const resolvers = {
         },
       });
       return newTodo;
+    },
+  },
+  List: {
+    todos: async (parent, args, context) => {
+      return context.prisma.todo.findMany({
+        where: { listId: parent.id },
+      });
     },
   },
   //   Link: {
