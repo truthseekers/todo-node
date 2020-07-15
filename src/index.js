@@ -23,6 +23,14 @@ const resolvers = {
     todos: async (parent, args, context) => {
       return context.prisma.todo.findMany();
     },
+    todoById: async (obj, args, context, info) => {
+      const result = await prisma.todo.findOne({
+        where: {
+          id: parseInt(args.todoId),
+        },
+      });
+      return result;
+    },
   },
   Mutation: {
     // 2
@@ -58,6 +66,15 @@ const resolvers = {
     todos: async (parent, args, context) => {
       return context.prisma.todo.findMany({
         where: { listId: parent.id },
+      });
+    },
+  },
+  Todo: {
+    list: async (parent, args, context) => {
+      console.log("parent: ");
+      console.log(parent);
+      return context.prisma.list.findOne({
+        where: { id: parent.listId },
       });
     },
   },

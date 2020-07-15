@@ -3,6 +3,7 @@ type Query {
   feed: [Link!]!
   lists: [List!]!
   listById(listId: ID!): List
+  todoById(todoId: ID!): Todo
   todos: [Todo!]!
 }
 
@@ -27,6 +28,7 @@ type List {
 type Todo {
   id: ID!
   list: List!
+  listId: Int
   isCompleted: Boolean!
   name: String!
 }
