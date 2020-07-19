@@ -61,6 +61,12 @@ const resolvers = {
       });
       return newTodo;
     },
+    deleteTodo: async (parent, args, context, info) => {
+      const todo = await context.prisma.todo.delete({
+        where: { id: parseInt(args.todoId) },
+      });
+      return todo;
+    },
   },
   List: {
     todos: async (parent, args, context) => {

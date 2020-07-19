@@ -11,6 +11,7 @@ type Mutation {
   post(url: String!, description: String!): Link!
   newList(title: String!): List!
   createTodo(name: String!, listId: ID!): Todo
+  deleteTodo(todoId: ID!): Todo
 }
 
 type Link {
