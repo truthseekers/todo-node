@@ -12,6 +12,12 @@ type Mutation {
   newList(title: String!): List!
   createTodo(name: String!, listId: ID!): Todo
   deleteTodo(todoId: ID!): Todo
+  deleteList(listId: ID!): DeleteListResponse
+}
+
+type DeleteListResponse {
+  list: List!
+  todos: [Todo]!
 }
 
 type Link {
@@ -24,6 +30,10 @@ type List {
   id: ID!
   title: String!
   todos: [Todo!]
+}
+
+type BatchPayload {
+  count: Int
 }
 
 type Todo {

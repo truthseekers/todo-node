@@ -16,3 +16,16 @@ model Link {
     description String
     url         String
 }
+
+model List {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    title     String
+}
+
+model Todo {
+    id          Int     @id @default(autoincrement())
+    listId      Int
+    name        String
+    isCompleted Boolean
+}

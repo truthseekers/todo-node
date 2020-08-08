@@ -56,7 +56,7 @@ const resolvers = {
         data: {
           isCompleted: false,
           name: args.name,
-          list: { connect: { id: parseInt(args.listId) } },
+          listId: parseInt(args.listId),
         },
       });
       return newTodo;
@@ -66,6 +66,21 @@ const resolvers = {
         where: { id: parseInt(args.todoId) },
       });
       return todo;
+    },
+    deleteList: async (parent, args, context, info) => {
+      const deletedTodosCount = await context.prisma.todo.deleteMany({
+        where: { listId: parseInt(args.listId) },
+      });
+      const list = await context.prisma.list.delete({
+        where: { id: parseInt(args.listId) },
+      });
+      // return list;
+
+      let obj = { deletedTodosCount, list };
+      console.log("heres the object: ");
+      console.log(obj);
+      return obj;
+      // return deletedTodosCount;
     },
   },
   List: {
