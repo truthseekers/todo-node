@@ -1,3 +1,7 @@
 # Prisma Migrate lockfile v1
 
 20200723154035-listandtodos
+20200808063027-userauth
+20200808073545-linkusers
+20200808093602-fix-list
+20200808095206-todo-users

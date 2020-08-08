@@ -13,6 +13,8 @@ type Mutation {
   createTodo(name: String!, listId: ID!): Todo
   deleteTodo(todoId: ID!): Todo
   deleteList(listId: ID!): DeleteListResponse
+  signup(email: String!, password: String!, name: String!): AuthPayload
+  login(email: String!, password: String!): AuthPayload
 }
 
 type DeleteListResponse {
@@ -24,12 +26,28 @@ type Link {
   id: ID!
   description: String!
   url: String!
+  postedBy: User
+}
+
+type AuthPayload {
+  token: String
+  user: User
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  todos: [Todo!]!
+  lists: [List!]!
+  links: [Link!]!
 }
 
 type List {
   id: ID!
   title: String!
   todos: [Todo!]
+  postedBy: User
 }
 
 type BatchPayload {
@@ -42,4 +60,5 @@ type Todo {
   listId: Int
   isCompleted: Boolean!
   name: String!
+  postedBy: User
 }
