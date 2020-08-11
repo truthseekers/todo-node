@@ -5,6 +5,7 @@ type Query {
   listById(listId: ID!): List
   todoById(todoId: ID!): Todo
   todos: [Todo!]!
+  me: User!
 }
 
 type Mutation {

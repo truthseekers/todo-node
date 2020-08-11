@@ -1,9 +1,27 @@
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { APP_SECRET, getUserId } = require("../utils");
+
 function info() {
   return `This is the API of a Hackernews Clone`;
 }
 async function feed(parent, args, context) {
   return context.prisma.link.findMany();
 }
+
+async function me(parent, args, context) {
+  const userId = getUserId(context);
+  const result = context.prisma.user.findOne({
+    where: {
+      id: userId,
+    },
+  });
+
+  console.log("result from in me... ID is:  ", userId);
+  console.log(result);
+  return result;
+}
+
 async function lists(parent, args, context) {
   return context.prisma.list.findMany();
 }
@@ -34,4 +52,5 @@ module.exports = {
   listById,
   todos,
   todoById,
+  me,
 };
