@@ -98,6 +98,25 @@ async function deleteTodo(parent, args, context, info) {
     console.log("no deletion occurred FOR DELETETODO");
   }
 }
+
+async function updateTodo(parent, args, context, info) {
+  const todoTest = await context.prisma.todo.update({
+    where: {
+      id: parseInt(args.todoId),
+    },
+    data: { isCompleted: args.isCompleted },
+  });
+  //let newTodo = { ...todoTest };
+  // todoTest.isCompleted = args.isCompleted;
+  // console.log("oldTodo...");
+  // console.log(todoTest);
+  // console.log("newTodo: ");
+  // console.log(newTodo);
+  console.log("args: ");
+  console.log(args);
+  return todoTest;
+}
+
 async function deleteList(parent, args, context, info) {
   console.log("0: deleteList. parent: ");
   console.log(parent);
@@ -141,4 +160,5 @@ module.exports = {
   createTodo,
   deleteTodo,
   deleteList,
+  updateTodo,
 };

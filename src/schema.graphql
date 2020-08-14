@@ -14,6 +14,7 @@ type Mutation {
   createTodo(name: String!, listId: ID!): Todo
   deleteTodo(todoId: ID!): Todo
   deleteList(listId: ID!): DeleteListResponse
+  updateTodo(todoId: ID!, isCompleted: Boolean!): Todo!
   signup(email: String!, password: String!, name: String!): AuthPayload
   login(email: String!, password: String!): AuthPayload
 }
