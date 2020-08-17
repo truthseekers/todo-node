@@ -106,14 +106,6 @@ async function updateTodo(parent, args, context, info) {
     },
     data: { isCompleted: args.isCompleted },
   });
-  //let newTodo = { ...todoTest };
-  // todoTest.isCompleted = args.isCompleted;
-  // console.log("oldTodo...");
-  // console.log(todoTest);
-  // console.log("newTodo: ");
-  // console.log(newTodo);
-  console.log("args: ");
-  console.log(args);
   return todoTest;
 }
 
@@ -143,7 +135,7 @@ async function deleteList(parent, args, context, info) {
         id: parseInt(args.listId),
       },
     });
-    let obj = { deletedTodos, list };
+    let obj = { todos: deletedTodos, list };
     console.log("3: obj: ");
     console.log(obj);
     return obj;

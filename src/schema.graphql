@@ -10,7 +10,7 @@ type Query {
 
 type Mutation {
   post(url: String!, description: String!): Link!
-  newList(title: String!): List!
+  newList(title: String!, userId: ID!): List!
   createTodo(name: String!, listId: ID!): Todo
   deleteTodo(todoId: ID!): Todo
   deleteList(listId: ID!): DeleteListResponse
@@ -21,7 +21,7 @@ type Mutation {
 
 type DeleteListResponse {
   list: List!
-  todos: [Todo]!
+  todos: BatchPayload!
 }
 
 type Link {
