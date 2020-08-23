@@ -9,7 +9,6 @@ const Link = require("./resolvers/Link");
 const List = require("./resolvers/List");
 const Todo = require("./resolvers/Todo");
 
-// 2
 const resolvers = {
   Query,
   Mutation,
