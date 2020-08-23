@@ -3,7 +3,12 @@ const APP_SECRET = "GraphQL-is-aw3some";
 
 console.log("hello from utils!");
 
+function createToken(user) {
+  return jwt.sign(user, APP_SECRET);
+}
+
 function getUserId(context) {
+  console.log("getUserId");
   const Authorization = context.request.get("Authorization");
   if (Authorization) {
     const token = Authorization.replace("Bearer ", "");
@@ -22,4 +27,5 @@ function getUser(context) {
 module.exports = {
   APP_SECRET,
   getUserId,
+  createToken,
 };

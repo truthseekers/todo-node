@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { APP_SECRET, getUserId } = require("../utils");
+const { APP_SECRET, getUserId, createToken } = require("../utils");
 
 async function signup(parent, args, context, info) {
   // 1
@@ -12,7 +12,9 @@ async function signup(parent, args, context, info) {
   });
 
   // 3
-  const token = jwt.sign({ userId: user.id }, APP_SECRET);
+  console.log("Does createToken work????");
+  const token = createToken({ userId: user.id });
+  // const token = jwt.sign({ userId: user.id }, APP_SECRET);
 
   // 4
   return {
@@ -35,8 +37,9 @@ async function login(parent, args, context, info) {
   if (!valid) {
     throw new Error("Invalid password");
   }
-
-  const token = jwt.sign({ userId: user.id }, APP_SECRET);
+  console.log("token works in login!");
+  const token = createToken({ userId: user.id });
+  // const token = jwt.sign({ userId: user.id }, APP_SECRET);
 
   // 3
   return {
