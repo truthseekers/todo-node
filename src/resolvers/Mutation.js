@@ -13,7 +13,7 @@ async function signup(parent, args, context, info) {
 
   // 3
   console.log("Does createToken work????");
-  const token = createToken({ userId: user.id });
+  const token = context.createToken({ userId: user.id });
   // const token = jwt.sign({ userId: user.id }, APP_SECRET);
 
   // 4
@@ -37,8 +37,8 @@ async function login(parent, args, context, info) {
   if (!valid) {
     throw new Error("Invalid password");
   }
-  console.log("token works in login!");
-  const token = createToken({ userId: user.id });
+  console.log("CONTEXT CREATE TOKEN token works in login!");
+  const token = context.createToken({ userId: user.id });
   // const token = jwt.sign({ userId: user.id }, APP_SECRET);
 
   // 3
