@@ -30,9 +30,13 @@ const getUserIdFromToken = (arg) => {
   } catch (e) {
     return null;
   }
+};
 
-  // console.log("Authorization in utils.js");
-  // console.log(Authorization);
+const authenticated = (next) => (root, args, context, info) => {
+  if (!context.userId) {
+    throw new Error("not authenticated YO");
+  }
+  return next(root, args, context, info);
 };
 
 function getUserId(context) {
@@ -58,4 +62,5 @@ module.exports = {
   getUserId,
   createToken,
   getUserIdFromToken,
+  authenticated,
 };

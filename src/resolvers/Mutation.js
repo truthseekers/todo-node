@@ -1,87 +1,12 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { APP_SECRET, getUserId, createToken } = require("../utils");
+const {
+  APP_SECRET,
+  getUserId,
+  createToken,
+  authenticated,
+} = require("../utils");
 
-async function signup(parent, args, context, info) {
-  // 1
-  const password = await bcrypt.hash(args.password, 10);
-
-  // 2
-  const user = await context.prisma.user.create({
-    data: { ...args, password },
-  });
-
-  // 3
-  console.log("Does createToken work????");
-  const token = context.createToken({ userId: user.id });
-  // const token = jwt.sign({ userId: user.id }, APP_SECRET);
-
-  // 4
-  return {
-    token,
-    user,
-  };
-}
-
-async function login(parent, args, context, info) {
-  // 1
-  const user = await context.prisma.user.findOne({
-    where: { email: args.email },
-  });
-  if (!user) {
-    throw new Error("No such user found");
-  }
-
-  // 2
-  const valid = await bcrypt.compare(args.password, user.password);
-  if (!valid) {
-    throw new Error("Invalid password");
-  }
-  console.log("CONTEXT CREATE TOKEN token works in login!");
-  const token = context.createToken({ userId: user.id });
-  // const token = jwt.sign({ userId: user.id }, APP_SECRET);
-
-  // 3
-  return {
-    token,
-    user,
-  };
-}
-
-function post(parent, args, context, info) {
-  const userId = getUserId(context);
-
-  return context.prisma.link.create({
-    data: {
-      url: args.url,
-      description: args.description,
-      postedBy: { connect: { id: userId } },
-    },
-  });
-}
-function newList(parent, args, context, info) {
-  const userId = getUserId(context);
-  const newList = context.prisma.list.create({
-    data: {
-      title: args.title,
-      postedBy: { connect: { id: userId } },
-    },
-  });
-  return newList;
-}
-function createTodo(parent, args, context, info) {
-  const userId = getUserId(context);
-  const newTodo = context.prisma.todo.create({
-    data: {
-      isCompleted: false,
-      name: args.name,
-      listId: parseInt(args.listId),
-      postedBy: { connect: { id: userId } },
-    },
-  });
-  return newTodo;
-}
-// Might be able to do the deletion inside the "then" after the promise returns. Look into that after learning promises better
 async function deleteTodo(parent, args, context, info) {
   console.log("in individual deleteTodo");
   const userId = getUserId(context);
@@ -90,7 +15,8 @@ async function deleteTodo(parent, args, context, info) {
       id: parseInt(args.todoId),
     },
   });
-
+  console.log("in deleteTodo. context.userId: " + context.userId);
+  console.log("in deleteTodo. todoTest.postedById " + todoTest.postedById);
   if (todoTest.postedById == userId) {
     console.log("user has permission to delete. Deleting...");
     const todo = await context.prisma.todo.delete({
@@ -101,7 +27,6 @@ async function deleteTodo(parent, args, context, info) {
     console.log("no deletion occurred FOR DELETETODO");
   }
 }
-
 async function updateTodo(parent, args, context, info) {
   const todoTest = await context.prisma.todo.update({
     where: {
@@ -148,12 +73,85 @@ async function deleteList(parent, args, context, info) {
 }
 
 module.exports = {
-  signup,
-  login,
-  post,
-  newList,
-  createTodo,
-  deleteTodo,
+  // signup,
+  async signup(parent, args, context, info) {
+    // 1
+    const password = await bcrypt.hash(args.password, 10);
+
+    // 2
+    const user = await context.prisma.user.create({
+      data: { ...args, password },
+    });
+
+    // 3
+    console.log("Does createToken work????");
+    const token = context.createToken({ userId: user.id });
+    // const token = jwt.sign({ userId: user.id }, APP_SECRET);
+
+    // 4
+    return {
+      token,
+      user,
+    };
+  },
+  async login(parent, args, context, info) {
+    // 1
+    const user = await context.prisma.user.findOne({
+      where: { email: args.email },
+    });
+    if (!user) {
+      throw new Error("No such user found");
+    }
+
+    // 2
+    const valid = await bcrypt.compare(args.password, user.password);
+    if (!valid) {
+      throw new Error("Invalid password");
+    }
+    console.log("CONTEXT CREATE TOKEN token works in login!");
+    const token = context.createToken({ userId: user.id });
+    // const token = jwt.sign({ userId: user.id }, APP_SECRET);
+
+    // 3
+    return {
+      token,
+      user,
+    };
+  },
+  post(parent, args, context, info) {
+    const userId = getUserId(context);
+
+    return context.prisma.link.create({
+      data: {
+        url: args.url,
+        description: args.description,
+        postedBy: { connect: { id: userId } },
+      },
+    });
+  },
+  newList: authenticated((parent, args, context, info) => {
+    const userId = getUserId(context);
+    const newList = context.prisma.list.create({
+      data: {
+        title: args.title,
+        postedBy: { connect: { id: userId } },
+      },
+    });
+    return newList;
+  }),
+  createTodo: authenticated((parent, args, context, info) => {
+    const userId = getUserId(context);
+    const newTodo = context.prisma.todo.create({
+      data: {
+        isCompleted: false,
+        name: args.name,
+        listId: parseInt(args.listId),
+        postedBy: { connect: { id: userId } },
+      },
+    });
+    return newTodo;
+  }),
   deleteList,
+  deleteTodo,
   updateTodo,
 };
