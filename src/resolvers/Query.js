@@ -16,6 +16,8 @@ async function me(parent, args, context) {
       id: userId,
     },
   });
+  console.log("ME result");
+  console.log(result);
 
   return result;
 }

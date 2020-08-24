@@ -19,26 +19,22 @@ const getUserIdFromToken = (arg) => {
   if (Authorization) {
     const token = Authorization.replace("Bearer ", "");
     const { userId } = jwt.verify(token, APP_SECRET);
-    // console.log("userId from jwt in utils!");
-    // console.log(userId);
+
+    // keep this for now. We'll start with just the id. but want to keep this in case.
+    const user = prisma.user.findOne({
+      where: {
+        id: userId,
+      },
+    });
+
     return userId;
   }
 
-  //   if (Authorization) {
-  //     console.log("in Auth conditional of getUserIdFromToken");
-  //     const token = Authorization.replace("Bearer ", "");
-  //     // const userObj = jwt.verify(token, APP_SECRET);
-  //     const { userId } = jwt.verify(token, APP_SECRET);
-  //     //console.log("user obj is.... STILL ");
-  //     // console.log(userObj);
   //     // return prisma.user.findOne({
   //     //   where: {
   //     //     id: userId,
   //     //   },
   //     // });
-  //     return userId;
-  //     // return userObj;
-  //   }
 };
 
 function getUserId(context) {

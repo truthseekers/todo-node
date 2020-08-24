@@ -32,26 +32,13 @@ const server = new GraphQLServer({
   context: (request) => {
     const userId = getUserIdFromToken(request);
 
-    console.log("userId from the index.js. were good so far");
     console.log(userId);
-    // console.log("yayayayaya userId: ");
-    // console.log(userId);
-
-    //const Authorization = request.request.get("Authorization");
-    //console.log("Auth in index.js");
-    //console.log(Authorization);
-
-    //if (Authorization) {
-    //  const token = Authorization.replace("Bearer ", "");
-    //  const { userId } = jwt.verify(token, APP_SECRET);
-    // console.log("userId in conditional in index.js");
-    // console.log(userId);
-    //}
 
     return {
       ...request,
       prisma,
       createToken,
+      userId: userId,
     };
   },
 });
