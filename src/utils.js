@@ -11,30 +11,28 @@ function createToken(user) {
 }
 
 const getUserIdFromToken = (arg) => {
-  const Authorization = arg.request.get("Authorization");
+  try {
+    const Authorization = arg.request.get("Authorization");
+
+    if (Authorization) {
+      const token = Authorization.replace("Bearer ", "");
+      const { userId } = jwt.verify(token, APP_SECRET);
+
+      // keep this for now. We'll start with just the id. but want to keep this in case.
+      const user = prisma.user.findOne({
+        where: {
+          id: userId,
+        },
+      });
+
+      return userId;
+    }
+  } catch (e) {
+    return null;
+  }
 
   // console.log("Authorization in utils.js");
   // console.log(Authorization);
-
-  if (Authorization) {
-    const token = Authorization.replace("Bearer ", "");
-    const { userId } = jwt.verify(token, APP_SECRET);
-
-    // keep this for now. We'll start with just the id. but want to keep this in case.
-    const user = prisma.user.findOne({
-      where: {
-        id: userId,
-      },
-    });
-
-    return userId;
-  }
-
-  //     // return prisma.user.findOne({
-  //     //   where: {
-  //     //     id: userId,
-  //     //   },
-  //     // });
 };
 
 function getUserId(context) {
